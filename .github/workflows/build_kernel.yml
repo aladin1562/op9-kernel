@@ -33,6 +33,7 @@ jobs:
         CLANG_TRIPLE: aarch64-linux-gnu-
       run: |
         CLANG_DIR="${{ github.workspace }}/clang/bin"
+        chmod -R +x scripts/
         make O=out ARCH=arm64 op9_defconfig
         make O=out ARCH=arm64 \
              CC="${CLANG_DIR}/clang" \
