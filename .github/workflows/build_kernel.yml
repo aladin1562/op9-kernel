@@ -22,9 +22,6 @@ jobs:
     - name: Download Toolchain (Neutron Clang)
       run: |
         git clone --depth=1 https://github.com/Neutron-Clang/neutron-clang clang
-        cd clang
-        ./antman -S
-        cd ..
 
     - name: Build Kernel
       env:
