@@ -7,3 +7,8 @@ object/
 .*.cmd
 modules.order
 Module.symvers
+op9-kernel/
+**/aux.c
+**/aux.h
+drivers/gpu/drm/nouveau/
+include/soc/arc/
