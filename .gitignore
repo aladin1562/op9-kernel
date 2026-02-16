@@ -1,0 +1,9 @@
+out/
+samples/
+object/
+*.o
+*.ko
+*.mod.c
+.*.cmd
+modules.order
+Module.symvers

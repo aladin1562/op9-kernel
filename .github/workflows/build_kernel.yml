@@ -1,0 +1,52 @@
+name: Build Tsurugi Kernel
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Build Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential bc flex bison libssl-dev libelf-dev binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu
+
+    - name: Download Toolchain (Proton Clang)
+      run: |
+        git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
+
+    - name: Build Kernel
+      env:
+        ARCH: arm64
+        SUBARCH: arm64
+        CROSS_COMPILE: aarch64-linux-gnu-
+        CROSS_COMPILE_ARM32: arm-linux-gnueabihf-
+        CC: ${{ github.workspace }}/clang/bin/clang
+        CLANG_TRIPLE: aarch64-linux-gnu-
+      run: |
+        export PATH="${{ github.workspace }}/clang/bin:$PATH"
+        make O=out ARCH=arm64 op9_defconfig
+        make O=out ARCH=arm64 \
+             CC=clang \
+             CROSS_COMPILE=aarch64-linux-gnu- \
+             CROSS_COMPILE_ARM32=arm-linux-gnueabihf- \
+             LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump \
+             STRIP=llvm-strip \
+             -j$(nproc --all) \
+             Image.gz-dtb dtbo.img
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: tsurugi-kernel-op9
+        path: |
+          out/arch/arm64/boot/Image.gz-dtb
+          out/arch/arm64/boot/dts/vendor/qcom/*.dtbo
