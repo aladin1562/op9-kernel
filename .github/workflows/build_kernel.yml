@@ -36,8 +36,8 @@ jobs:
         make O=out ARCH=arm64 op9_defconfig
         make O=out ARCH=arm64 \
              CC=clang \
-             HOSTCC=clang \
-             HOSTLD=ld \
+             HOSTCC=gcc \
+             HOSTCXX=g++ \
              CROSS_COMPILE=aarch64-linux-gnu- \
              CROSS_COMPILE_ARM32=arm-linux-gnueabihf- \
              LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump \
