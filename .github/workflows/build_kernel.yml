@@ -19,9 +19,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential bc flex bison libssl-dev libelf-dev binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu
 
-    - name: Download Toolchain (Neutron Clang)
+    - name: Download Toolchain (Proton Clang)
       run: |
-        git clone --depth=1 https://github.com/Neutron-Clang/neutron-clang clang
+        git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
 
     - name: Build Kernel
       env:
