@@ -32,16 +32,20 @@ jobs:
         CC: ${{ github.workspace }}/clang/bin/clang
         CLANG_TRIPLE: aarch64-linux-gnu-
       run: |
-        export PATH="${{ github.workspace }}/clang/bin:$PATH"
+        CLANG_DIR="${{ github.workspace }}/clang/bin"
         make O=out ARCH=arm64 op9_defconfig
         make O=out ARCH=arm64 \
-             CC=clang \
+             CC="${CLANG_DIR}/clang" \
              HOSTCC=gcc \
              HOSTCXX=g++ \
-             CROSS_COMPILE=aarch64-linux-gnu- \
-             CROSS_COMPILE_ARM32=arm-linux-gnueabihf- \
-             LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump \
-             STRIP=llvm-strip \
+             CROSS_COMPILE="${CLANG_DIR}/aarch64-linux-gnu-" \
+             CROSS_COMPILE_ARM32="${CLANG_DIR}/arm-linux-gnueabi-" \
+             LD="${CLANG_DIR}/ld.lld" \
+             AR="${CLANG_DIR}/llvm-ar" \
+             NM="${CLANG_DIR}/llvm-nm" \
+             OBJCOPY="${CLANG_DIR}/llvm-objcopy" \
+             OBJDUMP="${CLANG_DIR}/llvm-objdump" \
+             STRIP="${CLANG_DIR}/llvm-strip" \
              -j$(nproc --all) \
              Image.gz-dtb dtbo.img
 
