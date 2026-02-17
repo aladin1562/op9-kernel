@@ -1209,7 +1209,7 @@ DECLARE_RWSEM(uts_sem);
 #define override_architecture(name)	0
 #endif
 
-static void override_custom_release(char __user *release, size_t len)
+static void __maybe_unused override_custom_release(char __user *release, size_t len)
 {
 #ifdef CONFIG_UNAME_OVERRIDE
 	char *buf;
