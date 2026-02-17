@@ -28,7 +28,17 @@ mkdir -p "$OUT_DIR"
 # make O="$OUT_DIR" mrproper
 
 echo "--- Configuring Kernel: $DEFCONFIG ---"
+# Repair include-prefix links when they are stored as plain files.
+for p in "$KERNEL_DIR"/scripts/dtc/include-prefixes/*; do
+    if [ -f "$p" ] && [ ! -L "$p" ]; then
+        target="$(cat "$p")"
+        rm -f "$p"
+        ln -s "$target" "$p"
+    fi
+done
+
 make O="$OUT_DIR" ARCH=arm64 "$DEFCONFIG"
+make O="$OUT_DIR" ARCH=arm64 olddefconfig
 
 echo "--- Starting Build (CPUs: $(nproc)) ---"
 make O="$OUT_DIR" \
@@ -42,7 +52,7 @@ make O="$OUT_DIR" \
     STRIP=llvm-strip \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-    -j$(nproc) Image.gz-dtb dtbo.img
+    -j$(nproc) Image.gz-dtb dtbs
 
 echo "--- Build Finished ---"
 ls -lh "$OUT_DIR/arch/arm64/boot/Image.gz-dtb"

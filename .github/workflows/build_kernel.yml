@@ -34,7 +34,16 @@ jobs:
       run: |
         CLANG_DIR="${{ github.workspace }}/clang/bin"
         chmod -R +x scripts/
+        # Repair include-prefix links when they are checked out as plain files.
+        for p in scripts/dtc/include-prefixes/*; do
+          if [ -f "$p" ] && [ ! -L "$p" ]; then
+            target="$(cat "$p")"
+            rm -f "$p"
+            ln -s "$target" "$p"
+          fi
+        done
         make O=out ARCH=arm64 op9_defconfig
+        make O=out ARCH=arm64 olddefconfig
         make O=out ARCH=arm64 \
              CC="${CLANG_DIR}/clang" \
              HOSTCC=gcc \
