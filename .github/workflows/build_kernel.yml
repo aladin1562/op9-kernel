@@ -32,6 +32,7 @@ jobs:
         CC: ${{ github.workspace }}/clang/bin/clang
         CLANG_TRIPLE: aarch64-linux-gnu-
       run: |
+        set -euo pipefail
         CLANG_DIR="${{ github.workspace }}/clang/bin"
         chmod -R +x scripts/
         # Repair include-prefix links when they are checked out as plain files.
@@ -57,13 +58,14 @@ jobs:
              OBJDUMP="${CLANG_DIR}/llvm-objdump" \
              STRIP="${CLANG_DIR}/llvm-strip" \
              -j$(nproc --all) \
-             Image.gz-dtb dtbs
+             Image.gz-dtb
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: tsurugi-kernel-op9
+        if-no-files-found: warn
         path: |
           out/arch/arm64/boot/Image.gz-dtb
-          out/arch/arm64/boot/dts/vendor/qcom/*.dtb
-          out/arch/arm64/boot/dts/vendor/qcom/*.dtbo
+          out/arch/arm64/boot/dts/vendor/oplus/lemonadev/*.dtb
+          out/arch/arm64/boot/dts/vendor/oplus/lemonadev/*.dtbo

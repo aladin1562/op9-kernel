@@ -52,7 +52,7 @@ make O="$OUT_DIR" \
     STRIP=llvm-strip \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-    -j$(nproc) Image.gz-dtb dtbs
+    -j$(nproc) Image.gz-dtb
 
 echo "--- Build Finished ---"
 ls -lh "$OUT_DIR/arch/arm64/boot/Image.gz-dtb"
